@@ -3,7 +3,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useCart } from '../context/CartContext';
 
-const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
+const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick, onOrderHistoryClick }) => {
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const { getCartItemsCount, getCartTotal } = useCart();
@@ -94,7 +94,6 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
                             </div>
                         )}
 
-
                         {/* User Profile Dropdown */}
                         <div className="nav-item dropdown position-relative">
                             <button
@@ -103,7 +102,6 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
                                 style={{ textDecoration: 'none' }}
                             >
                                 {/* User Avatar */}
-
                                 <div className="rounded-circle d-flex align-items-center justify-content-center me-2 hover-lift"
                                     style={{
                                         width: '45px',
@@ -118,7 +116,6 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
                                     }}>
                                     {!userProfile?.profilePicture && (role === "farmer" ? "👨‍🌾" : "🛒")}
                                 </div>
-
 
                                 {/* User Info (Desktop only) */}
                                 <div className="d-none d-lg-block text-start">
@@ -141,10 +138,14 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
                                                 style={{
                                                     width: '50px',
                                                     height: '50px',
-                                                    background: 'linear-gradient(135deg, #4CAF50 0%, #2196F3 100%)',
+                                                    background: userProfile?.profilePicture
+                                                        ? `url(${userProfile.profilePicture})`
+                                                        : 'linear-gradient(135deg, #4CAF50 0%, #2196F3 100%)',
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center',
                                                     fontSize: '1.5rem'
                                                 }}>
-                                                {role === "farmer" ? "👨‍🌾" : "🛒"}
+                                                {!userProfile?.profilePicture && (role === "farmer" ? "👨‍🌾" : "🛒")}
                                             </div>
                                             <div>
                                                 <div className="fw-bold">{userProfile?.fullName || 'User'}</div>
@@ -179,7 +180,7 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
 
                                     {role === "customer" && (
                                         <>
-                                            <button className="dropdown-item d-flex align-items-center py-2">
+                                            <button className="dropdown-item d-flex align-items-center py-2" onClick={onOrderHistoryClick}>
                                                 <span className="me-3" style={{ fontSize: '1.2rem' }}>📋</span>
                                                 <div>
                                                     <div className="fw-semibold">Order History</div>
@@ -189,6 +190,8 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
 
                                         </>
                                     )}
+
+                                    <div className="dropdown-divider"></div>
 
 
                                     {/* Logout */}

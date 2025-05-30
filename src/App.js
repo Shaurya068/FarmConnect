@@ -9,13 +9,10 @@ import Navbar from "./components/Navbar";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import ProfilePage from "./components/ProfilePage";
+import OrderHistory from "./components/OrderHistory";
 import { CartProvider } from "./context/CartContext";
 import './styles/custom.css';
 import { addSampleUsers, addSampleProducts } from './utils/addSampleData';
-
-// Add this inside your App component's return statement
-
-
 
 function App() {
   const [user, setUser] = useState(null);
@@ -25,6 +22,7 @@ function App() {
   const [showCart, setShowCart] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
 
   const fetchUserProfile = async (uid) => {
@@ -79,6 +77,10 @@ function App() {
     setShowProfile(true);
   };
 
+  const handleOrderHistoryClick = () => {
+    setShowOrderHistory(true);
+  };
+
   const handleProfileUpdate = async () => {
     if (user) {
       await fetchUserProfile(user.uid);
@@ -116,7 +118,31 @@ function App() {
           role={role}
           onCartClick={handleCartClick}
           onProfileClick={handleProfileClick}
+          onOrderHistoryClick={handleOrderHistoryClick}
         />
+
+        {/* Development Tools (Only for farmers) */}
+        {user && role === "farmer" && (
+          <div className="container mt-3">
+            <div className="alert alert-warning">
+              <h6>Development Tools</h6>
+              <div className="d-flex gap-2">
+                <button
+                  className="btn btn-warning btn-sm"
+                  onClick={addSampleUsers}
+                >
+                  Add Sample Users
+                </button>
+                <button
+                  className="btn btn-info btn-sm"
+                  onClick={addSampleProducts}
+                >
+                  Add Sample Products
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Order Success Notification */}
         {orderSuccess && (
@@ -151,6 +177,14 @@ function App() {
           onProfileUpdate={handleProfileUpdate}
         />
 
+        {/* Order History Modal (Only for customers) */}
+        {role === "customer" && (
+          <OrderHistory
+            isOpen={showOrderHistory}
+            onClose={() => setShowOrderHistory(false)}
+          />
+        )}
+
         {/* Cart Modal (Only for customers) */}
         {role === "customer" && (
           <Cart
@@ -173,7 +207,6 @@ function App() {
         )}
       </div>
     </CartProvider>
-
   );
 }
 

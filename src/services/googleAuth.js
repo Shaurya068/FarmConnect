@@ -12,19 +12,20 @@ export const signInWithGoogle = async () => {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
 
         if (!userDoc.exists()) {
-            // Create user profile for new Google users
-            await setDoc(doc(db, 'users', user.uid), {
-                uid: user.uid,
-                email: user.email,
-                fullName: user.displayName || '',
-                role: 'customer', // Default role for Google sign-ins
-                phone: user.phoneNumber || '',
-                location: '',
-                profilePicture: user.photoURL || '',
-                provider: 'google',
-                createdAt: new Date(),
-                updatedAt: new Date()
-            });
+            // Do not create user profile here to allow role selection modal
+            // User profile will be created after role selection
+            // await setDoc(doc(db, 'users', user.uid), {
+            //     uid: user.uid,
+            //     email: user.email,
+            //     fullName: user.displayName || '',
+            //     role: 'customer', // Default role for Google sign-ins
+            //     phone: user.phoneNumber || '',
+            //     location: '',
+            //     profilePicture: user.photoURL || '',
+            //     provider: 'google',
+            //     createdAt: new Date(),
+            //     updatedAt: new Date()
+            // });
         }
 
         return {
@@ -62,19 +63,20 @@ export const handleGoogleRedirectResult = async () => {
             const userDoc = await getDoc(doc(db, 'users', user.uid));
 
             if (!userDoc.exists()) {
-                // Create user profile for new Google users
-                await setDoc(doc(db, 'users', user.uid), {
-                    uid: user.uid,
-                    email: user.email,
-                    fullName: user.displayName || '',
-                    role: 'customer',
-                    phone: user.phoneNumber || '',
-                    location: '',
-                    profilePicture: user.photoURL || '',
-                    provider: 'google',
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                });
+                // Do not create user profile here to allow role selection modal
+                // User profile will be created after role selection
+                // await setDoc(doc(db, 'users', user.uid), {
+                //     uid: user.uid,
+                //     email: user.email,
+                //     fullName: user.displayName || '',
+                //     role: 'customer',
+                //     phone: user.phoneNumber || '',
+                //     location: '',
+                //     profilePicture: user.photoURL || '',
+                //     provider: 'google',
+                //     createdAt: new Date(),
+                //     updatedAt: new Date()
+                // });
             }
 
             return {

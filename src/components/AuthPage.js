@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db, googleProvider } from '../firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
+import { signInWithGoogle } from '../services/googleAuth';
 import RoleSelectionModal from './RoleSelectionModal';
 
 const AuthPage = ({ onAuthSuccess }) => {
@@ -119,50 +120,23 @@ const AuthPage = ({ onAuthSuccess }) => {
         setError('');
 
         try {
-            // Clear any existing auth state
-            if (auth.currentUser) {
-                await auth.signOut();
-            }
+            const result = await signInWithGoogle();
 
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-
-            console.log('Google sign-in successful:', user.email);
-
-            // Check if user profile exists in Firestore
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-
-            if (!userDoc.exists()) {
-                // New user - show role selection modal
-                console.log('New user detected, showing role selection');
-                setGoogleUser(user);
-                setShowRoleSelection(true);
-            } else {
-                // Existing user - proceed with login
-                console.log('Existing user found:', userDoc.data());
-                if (onAuthSuccess) {
-                    onAuthSuccess();
+            if (result.success) {
+                if (result.isNewUser) {
+                    setGoogleUser(result.user);
+                    setShowRoleSelection(true);
+                } else {
+                    if (onAuthSuccess) {
+                        onAuthSuccess();
+                    }
                 }
+            } else {
+                setError('Google sign-in failed. Please try again.');
             }
         } catch (error) {
             console.error('Google sign-in error:', error);
-
-            switch (error.code) {
-                case 'auth/popup-closed-by-user':
-                    setError('Sign-in popup was closed. Please try again.');
-                    break;
-                case 'auth/popup-blocked':
-                    setError('Popup was blocked by browser. Please allow popups and try again.');
-                    break;
-                case 'auth/cancelled-popup-request':
-                    setError('Sign-in was cancelled. Please try again.');
-                    break;
-                case 'auth/network-request-failed':
-                    setError('Network error. Please check your connection and try again.');
-                    break;
-                default:
-                    setError('Google sign-in failed. Please try again.');
-            }
+            setError('Google sign-in failed. Please try again.');
         } finally {
             setGoogleLoading(false);
         }
