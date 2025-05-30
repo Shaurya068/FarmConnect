@@ -94,17 +94,6 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
                             </div>
                         )}
 
-                        {/* Notifications (Future feature) */}
-                        <div className="nav-item me-3">
-                            <button className="btn btn-outline-secondary position-relative" style={{ borderRadius: '50%', width: '45px', height: '45px' }}>
-                                <span style={{ fontSize: '1.2rem' }}>🔔</span>
-                                {/* Notification badge */}
-                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
-                                    3
-                                    <span className="visually-hidden">notifications</span>
-                                </span>
-                            </button>
-                        </div>
 
                         {/* User Profile Dropdown */}
                         <div className="nav-item dropdown position-relative">
@@ -114,16 +103,22 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
                                 style={{ textDecoration: 'none' }}
                             >
                                 {/* User Avatar */}
+
                                 <div className="rounded-circle d-flex align-items-center justify-content-center me-2 hover-lift"
                                     style={{
                                         width: '45px',
                                         height: '45px',
-                                        background: 'linear-gradient(135deg, #4CAF50 0%, #2196F3 100%)',
+                                        background: userProfile?.profilePicture
+                                            ? `url(${userProfile.profilePicture})`
+                                            : 'linear-gradient(135deg, #4CAF50 0%, #2196F3 100%)',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
                                         fontSize: '1.5rem',
                                         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
                                     }}>
-                                    {role === "farmer" ? "👨‍🌾" : "🛒"}
+                                    {!userProfile?.profilePicture && (role === "farmer" ? "👨‍🌾" : "🛒")}
                                 </div>
+
 
                                 {/* User Info (Desktop only) */}
                                 <div className="d-none d-lg-block text-start">
@@ -173,22 +168,13 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
                                     </button>
 
                                     {role === "farmer" && (
-                                        <>
-                                            <button className="dropdown-item d-flex align-items-center py-2">
-                                                <span className="me-3" style={{ fontSize: '1.2rem' }}>📊</span>
-                                                <div>
-                                                    <div className="fw-semibold">Sales Analytics</div>
-                                                    <small className="text-muted">View your performance</small>
-                                                </div>
-                                            </button>
-                                            <button className="dropdown-item d-flex align-items-center py-2">
-                                                <span className="me-3" style={{ fontSize: '1.2rem' }}>📦</span>
-                                                <div>
-                                                    <div className="fw-semibold">Manage Products</div>
-                                                    <small className="text-muted">Add, edit, or remove items</small>
-                                                </div>
-                                            </button>
-                                        </>
+                                        <button className="dropdown-item d-flex align-items-center py-2">
+                                            <span className="me-3" style={{ fontSize: '1.2rem' }}>📦</span>
+                                            <div>
+                                                <div className="fw-semibold">Manage Products</div>
+                                                <small className="text-muted">Add, edit, or remove items</small>
+                                            </div>
+                                        </button>
                                     )}
 
                                     {role === "customer" && (
@@ -200,36 +186,10 @@ const Navbar = ({ user, userProfile, role, onCartClick, onProfileClick }) => {
                                                     <small className="text-muted">View past orders</small>
                                                 </div>
                                             </button>
-                                            <button className="dropdown-item d-flex align-items-center py-2">
-                                                <span className="me-3" style={{ fontSize: '1.2rem' }}>❤️</span>
-                                                <div>
-                                                    <div className="fw-semibold">Wishlist</div>
-                                                    <small className="text-muted">Saved products</small>
-                                                </div>
-                                            </button>
+
                                         </>
                                     )}
 
-                                    <div className="dropdown-divider"></div>
-
-                                    {/* Settings */}
-                                    <button className="dropdown-item d-flex align-items-center py-2">
-                                        <span className="me-3" style={{ fontSize: '1.2rem' }}>⚙️</span>
-                                        <div>
-                                            <div className="fw-semibold">Settings</div>
-                                            <small className="text-muted">Preferences & privacy</small>
-                                        </div>
-                                    </button>
-
-                                    <button className="dropdown-item d-flex align-items-center py-2">
-                                        <span className="me-3" style={{ fontSize: '1.2rem' }}>❓</span>
-                                        <div>
-                                            <div className="fw-semibold">Help & Support</div>
-                                            <small className="text-muted">Get assistance</small>
-                                        </div>
-                                    </button>
-
-                                    <div className="dropdown-divider"></div>
 
                                     {/* Logout */}
                                     <button

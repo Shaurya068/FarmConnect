@@ -8,8 +8,14 @@ import AuthPage from "./components/AuthPage";
 import Navbar from "./components/Navbar";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
+import ProfilePage from "./components/ProfilePage";
 import { CartProvider } from "./context/CartContext";
 import './styles/custom.css';
+import { addSampleUsers, addSampleProducts } from './utils/addSampleData';
+
+// Add this inside your App component's return statement
+
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -18,34 +24,42 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [showCart, setShowCart] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
+
+  const fetchUserProfile = async (uid) => {
+    try {
+      const userDoc = await getDoc(doc(db, "users", uid));
+      if (userDoc.exists()) {
+        const profile = userDoc.data();
+        setUserProfile(profile);
+        setRole(profile.role);
+        return profile;
+      } else {
+        if (user?.email.includes("farmer")) {
+          setRole("farmer");
+        } else {
+          setRole("customer");
+        }
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      if (user?.email.includes("farmer")) {
+        setRole("farmer");
+      } else {
+        setRole("customer");
+      }
+      return null;
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
       setUser(u);
 
       if (u) {
-        try {
-          const userDoc = await getDoc(doc(db, "users", u.uid));
-          if (userDoc.exists()) {
-            const profile = userDoc.data();
-            setUserProfile(profile);
-            setRole(profile.role);
-          } else {
-            if (u.email.includes("farmer")) {
-              setRole("farmer");
-            } else {
-              setRole("customer");
-            }
-          }
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
-          if (u.email.includes("farmer")) {
-            setRole("farmer");
-          } else {
-            setRole("customer");
-          }
-        }
+        await fetchUserProfile(u.uid);
       } else {
         setRole("");
         setUserProfile(null);
@@ -62,8 +76,13 @@ function App() {
   };
 
   const handleProfileClick = () => {
-    // Handle profile click - could open profile modal or navigate to profile page
-    alert("Profile management coming soon!");
+    setShowProfile(true);
+  };
+
+  const handleProfileUpdate = async () => {
+    if (user) {
+      await fetchUserProfile(user.uid);
+    }
   };
 
   const handleOrderComplete = () => {
@@ -124,6 +143,14 @@ function App() {
           )}
         </main>
 
+        {/* Profile Modal */}
+        <ProfilePage
+          isOpen={showProfile}
+          onClose={() => setShowProfile(false)}
+          userProfile={userProfile}
+          onProfileUpdate={handleProfileUpdate}
+        />
+
         {/* Cart Modal (Only for customers) */}
         {role === "customer" && (
           <Cart
@@ -146,6 +173,7 @@ function App() {
         )}
       </div>
     </CartProvider>
+
   );
 }
 
