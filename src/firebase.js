@@ -4,13 +4,12 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 // Firebase configuration
 const firebaseConfig = {
-
-    apiKey: "AIzaSyArdP66Q6faUUPJkkjRk5S5dsuXo0xQ2V8",
-    authDomain: "farmer-marketplace-6a998.firebaseapp.com",
-    projectId: "farmer-marketplace-6a998",
-    storageBucket: "farmer-marketplace-6a998.firebasestorage.app",
-    messagingSenderId: "518838142278",
-    appId: "1:518838142278:web:213f441f3ec788cde3d147"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
 
