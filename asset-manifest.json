@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/farmer-marketplace/static/css/main.080f8b3e.css",
+    "main.js": "/farmer-marketplace/static/js/main.4c793af7.js",
+    "index.html": "/farmer-marketplace/index.html",
+    "main.080f8b3e.css.map": "/farmer-marketplace/static/css/main.080f8b3e.css.map",
+    "main.4c793af7.js.map": "/farmer-marketplace/static/js/main.4c793af7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.080f8b3e.css",
+    "static/js/main.4c793af7.js"
+  ]
+}
