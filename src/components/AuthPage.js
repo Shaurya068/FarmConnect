@@ -221,27 +221,7 @@ const AuthPage = ({ onAuthSuccess }) => {
                 </div>
 
                 <div className="p-5">
-                    {/* Toggle Buttons */}
-                    <div className="row g-2 mb-4">
-                        <div className="col-6">
-                            <button
-                                type="button"
-                                className={`btn w-100 btn-animated ${isLogin ? 'btn-primary-custom' : 'btn-outline-primary'}`}
-                                onClick={() => setIsLogin(true)}
-                            >
-                                Login
-                            </button>
-                        </div>
-                        <div className="col-6">
-                            <button
-                                type="button"
-                                className={`btn w-100 btn-animated ${!isLogin ? 'btn-primary-custom' : 'btn-outline-primary'}`}
-                                onClick={() => setIsLogin(false)}
-                            >
-                                Sign Up
-                            </button>
-                        </div>
-                    </div>
+
 
                     {/* Google Sign-In Button */}
                     <div className="mb-4">
